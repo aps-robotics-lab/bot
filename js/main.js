@@ -1072,21 +1072,27 @@ function initArenaVisualizers() {
 // --- Initialize All Modules ---
 document.addEventListener('DOMContentLoaded', () => {
   const curtain = document.getElementById('init-curtain');
-  if (curtain) {
-    setTimeout(() => {
-      curtain.classList.add('loaded');
-    }, 300);
-  }
 
+  // Start lightweight UI immediately
   initCustomCursor();
   initNavigation();
   init3DTilt();
   initParticleField();
   initArenaVisualizers();
-  initRaceShowcase('race-visual-stage');
 
-  // Initialize 3D Campus Scene
-  if (document.getElementById('campus-3d-canvas')) {
-    initCampusScene('campus-3d-canvas');
-  }
+  // Remove preloader quickly
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      curtain?.classList.add('loaded');
+    });
+  });
+
+  // Start heavy 3D systems after the first frame
+  setTimeout(() => {
+    initRaceShowcase('race-visual-stage');
+
+    if (document.getElementById('campus-3d-canvas')) {
+      initCampusScene('campus-3d-canvas');
+    }
+  }, 150);
 });
