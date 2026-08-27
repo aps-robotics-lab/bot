@@ -1,0 +1,78 @@
+/* ==========================================================================
+   ROBO KRITI 2026 - CONTACT & HELP DESK (css/contact.css)
+   ========================================================================== */
+
+.contact-hero {
+  padding: 120px 4vw 36px;
+  position: relative;
+  text-align: center;
+}
+
+.contact-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 4vw 100px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 36px;
+  margin-top: 36px;
+}
+
+.contact-info-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.contact-info-card:hover {
+  border-color: var(--accent-cyan-border);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.info-item h4 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.info-item p {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.contact-form-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.contact-form-card:hover {
+  border-color: var(--accent-cyan-border);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+@media (max-width: 860px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
