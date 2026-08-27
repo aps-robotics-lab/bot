@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Author &amp; Lab Control Deck | ROBO KRITI 2026</title>
+  <meta name="description" content="Official administrative console for Tinkering &amp; Robotics Lab organizers to broadcast notices and manage event logs.">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/author-control.css">
+</head>
+<body>
+  <!-- Ambient Atmosphere -->
+  <div class="bg-ambient-gradient" aria-hidden="true"></div>
+  <div class="bg-dot-matrix" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header>
+    <nav class="hud-nav" id="main-nav" aria-label="Main Navigation">
+      <a href="/" class="nav-brand" id="nav-brand-logo">
+        <div class="brand-logo-wrap">
+          <img 
+            src="https://i.ibb.co/b4SWGXw/aps-logo.jpg" 
+            alt="Army Public School Lucknow Logo" 
+            class="brand-logo-img" 
+            referrerpolicy="no-referrer"
+            loading="eager"
+          />
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">ROBO KRITI 2026</span>
+          <span class="brand-subtitle">APS LUCKNOW // TINKERING LAB</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" id="desktop-nav-links">
+        <li><a href="/events.html" class="nav-link" id="nav-link-events">Disciplines</a></li>
+        <li><a href="/registration.html" class="nav-link" id="nav-link-registration">Registration</a></li>
+        <li><a href="/announcements.html" class="nav-link" id="nav-link-announcements">Announcements</a></li>
+        <li><a href="/contact.html" class="nav-link" id="nav-link-contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="/" class="nav-cta-btn">
+          <span>Exit Admin Deck</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main style="padding: 140px 4vw 80px;">
+    <div style="max-width: 900px; margin: 0 auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="hud-tag emerald">AUTHORIZED SESSION</span>
+          <h1 style="font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #fff; margin-top: 8px;">
+            Lab Organizer Console
+          </h1>
+          <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px;">
+            Tinkering &amp; Robotics Lab // Broadcast Dispatcher &amp; Telemetry Overseer
+          </p>
+        </div>
+      </div>
+
+      <div class="hud-panel" style="padding: 36px; margin-bottom: 32px;">
+        <h2 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 18px;">
+          Broadcast New Announcement
+        </h2>
+        <form id="authorBroadcastForm">
+          <div style="margin-bottom: 16px;">
+            <label class="form-label" for="annTitle">Broadcast Title *</label>
+            <input type="text" id="annTitle" class="tech-input" placeholder="e.g. Arena Safety Inspection Guidelines" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div>
+              <label class="form-label" for="annCategory">Category *</label>
+              <select id="annCategory" class="tech-select" required>
+                <option value="urgent">Critical / Urgent Notice</option>
+                <option value="rules">Rulebook Update</option>
+                <option value="schedule">Schedule &amp; Timetable</option>
+                <option value="general">General Broadcast</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="annAuthor">Sign-off Authority *</label>
+              <input type="text" id="annAuthor" class="tech-input" value="Tinkering Lab Mentor" required>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <label class="form-label" for="annBody">Announcement Content (Markdown supported) *</label>
+            <textarea id="annBody" class="tech-textarea" rows="4" placeholder="Enter broadcast details..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-tech btn-tech-blue" style="padding: 12px 28px;">
+            Publish Broadcast to Live Feed →
+          </button>
+        </form>
+      </div>
+
+      <!-- Quick Registry Counter -->
+      <div class="hud-panel" style="padding: 28px;">
+        <h3 style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 16px;">
+          TOURNAMENT HEALTH STATUS
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
+          <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">ARENA STATUS</span>
+            <div style="font-family: var(--font-sans); font-size: 1.2rem; font-weight: 700; color: var(--accent-emerald); margin-top: 4px;">READY // 03 SEP</div>
+          </div>
+          <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">FEE POLICY</span>
+            <div style="font-family: var(--font-sans); font-size: 1.2rem; font-weight: 700; color: #fff; margin-top: 4px;">100% FREE</div>
+          </div>
+          <div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">DEADLINE CLOCK</span>
+            <div style="font-family: var(--font-sans); font-size: 1.2rem; font-weight: 700; color: var(--accent-amber); margin-top: 4px;">01 SEP 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

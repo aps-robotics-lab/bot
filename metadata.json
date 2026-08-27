@@ -1,0 +1,6 @@
+{
+  "name": "ROBO KRITI 2026",
+  "description": "A powerful, energetic tech battle. Four robotic disciplines. One arena. One day to prove what your machine can do. Inter-class robotics championship by Tinkering & Robotics Lab, Army Public School LBS Marg Lucknow.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
