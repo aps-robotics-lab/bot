@@ -2,8 +2,8 @@
  * ROBO KRITI 2026 - MASTER MAIN JAVASCRIPT
  * Modern Tech Festival Dynamics • 3D Tilt • Interactive Particles • Precision Audio
  */
-import { initCampusScene } from '.three-campus.js';
-import { initRaceShowcase } from '.three-event-showcase.js';
+import { initCampusScene } from './three-campus.js';
+import { initRaceShowcase } from './three-event-showcase.js';
 
 // --- Web Audio Micro-Feedback Synthesizer ---
 let audioCtx = null;
