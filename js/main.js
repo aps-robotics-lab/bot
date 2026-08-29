@@ -1,6 +1,7 @@
 /**
  * ROBO KRITI 2026 - MASTER MAIN JAVASCRIPT
- * Modern Tech Festival Dynamics • 3D Tilt • Interactive Particles • Precision Audio
+ * Modern Tech Festival Dynamics
+ * 3D Tilt • Interactive Particles • Precision Audio
  *
  * IMPORTANT:
  * - Robo Race is handled ONLY by three-event-showcase.js
@@ -11,17 +12,25 @@
 import { initCampusScene } from './three-campus.js';
 import { initRaceShowcase } from './three-event-showcase.js';
 
+
 // ============================================================
-// WEB AUDIO MICRO-FEEDBACK SYNTHESIZER
+// GLOBAL STATE
 // ============================================================
 
 let audioCtx = null;
 let soundEnabled = true;
 
+
+// ============================================================
+// WEB AUDIO MICRO-FEEDBACK SYNTHESIZER
+// ============================================================
+
 function initAudio() {
   if (audioCtx) return audioCtx;
 
-  const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+  const AudioCtxClass =
+    window.AudioContext ||
+    window.webkitAudioContext;
 
   if (!AudioCtxClass) {
     return null;
@@ -35,6 +44,7 @@ function initAudio() {
     return null;
   }
 }
+
 
 export function playTechSound(type = 'click') {
   if (!soundEnabled) return;
@@ -56,46 +66,110 @@ export function playTechSound(type = 'click') {
 
     const now = ctx.currentTime;
 
+    // -------------------------
+    // HOVER
+    // -------------------------
+
     if (type === 'hover') {
+
       osc.type = 'sine';
 
-      osc.frequency.setValueAtTime(650, now);
-      osc.frequency.exponentialRampToValueAtTime(950, now + 0.03);
+      osc.frequency.setValueAtTime(
+        650,
+        now
+      );
 
-      gain.gain.setValueAtTime(0.012, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+      osc.frequency.exponentialRampToValueAtTime(
+        950,
+        now + 0.03
+      );
+
+      gain.gain.setValueAtTime(
+        0.012,
+        now
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + 0.03
+      );
 
       osc.start(now);
       osc.stop(now + 0.03);
+    }
 
-    } else if (type === 'click') {
+    // -------------------------
+    // CLICK
+    // -------------------------
+
+    else if (type === 'click') {
+
       osc.type = 'sine';
 
-      osc.frequency.setValueAtTime(520, now);
-      osc.frequency.exponentialRampToValueAtTime(260, now + 0.05);
+      osc.frequency.setValueAtTime(
+        520,
+        now
+      );
 
-      gain.gain.setValueAtTime(0.035, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+      osc.frequency.exponentialRampToValueAtTime(
+        260,
+        now + 0.05
+      );
+
+      gain.gain.setValueAtTime(
+        0.035,
+        now
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + 0.05
+      );
 
       osc.start(now);
       osc.stop(now + 0.05);
+    }
 
-    } else if (type === 'success') {
+    // -------------------------
+    // SUCCESS
+    // -------------------------
+
+    else if (type === 'success') {
+
       osc.type = 'sine';
 
-      osc.frequency.setValueAtTime(523.25, now);
-      osc.frequency.setValueAtTime(659.25, now + 0.08);
-      osc.frequency.setValueAtTime(783.99, now + 0.16);
+      osc.frequency.setValueAtTime(
+        523.25,
+        now
+      );
 
-      gain.gain.setValueAtTime(0.04, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+      osc.frequency.setValueAtTime(
+        659.25,
+        now + 0.08
+      );
+
+      osc.frequency.setValueAtTime(
+        783.99,
+        now + 0.16
+      );
+
+      gain.gain.setValueAtTime(
+        0.04,
+        now
+      );
+
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        now + 0.28
+      );
 
       osc.start(now);
       osc.stop(now + 0.28);
     }
 
   } catch (error) {
-    // Audio is optional and must never break the website.
+    // Audio is optional.
+    // Never allow audio errors to break the website.
   }
 }
 
@@ -105,73 +179,153 @@ export function playTechSound(type = 'click') {
 // ============================================================
 
 function init3DTilt() {
-  const tiltElements = document.querySelectorAll(
-    '.tilt-card, .event-card, .editorial-quote-block, ' +
-    '.contact-info-card, .contact-form-card, .reg-form-card, ' +
-    '.tech-bracket-container'
-  );
+
+  const tiltElements =
+    document.querySelectorAll(
+      '.tilt-card, ' +
+      '.event-card, ' +
+      '.editorial-quote-block, ' +
+      '.contact-info-card, ' +
+      '.contact-form-card, ' +
+      '.reg-form-card, ' +
+      '.tech-bracket-container'
+    );
 
   if (!tiltElements.length) return;
 
+
   tiltElements.forEach((el) => {
-    if (el.dataset.tiltInitialized === 'true') return;
+
+    if (
+      el.dataset.tiltInitialized === 'true'
+    ) {
+      return;
+    }
 
     el.dataset.tiltInitialized = 'true';
 
+
+    // -------------------------
+    // CREATE GLARE
+    // -------------------------
+
     if (!el.querySelector('.tilt-glare')) {
-      const glare = document.createElement('div');
+
+      const glare =
+        document.createElement('div');
 
       glare.className = 'tilt-glare';
-      glare.setAttribute('aria-hidden', 'true');
+
+      glare.setAttribute(
+        'aria-hidden',
+        'true'
+      );
 
       el.appendChild(glare);
     }
 
-    const glareEl = el.querySelector('.tilt-glare');
 
-    el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
+    const glareEl =
+      el.querySelector('.tilt-glare');
 
-      if (!rect.width || !rect.height) return;
 
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    // -------------------------
+    // MOUSE MOVE
+    // -------------------------
 
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
+    el.addEventListener(
+      'mousemove',
+      (e) => {
 
-      const rotateX = ((y - centerY) / centerY) * -7;
-      const rotateY = ((x - centerX) / centerX) * 7;
+        const rect =
+          el.getBoundingClientRect();
 
-      el.style.transition = 'none';
+        if (
+          !rect.width ||
+          !rect.height
+        ) {
+          return;
+        }
 
-      el.style.transform =
-        `perspective(1000px) ` +
-        `rotateX(${rotateX.toFixed(2)}deg) ` +
-        `rotateY(${rotateY.toFixed(2)}deg) ` +
-        `scale3d(1.015, 1.015, 1.015)`;
 
-      if (glareEl) {
-        glareEl.style.background =
-          `radial-gradient(` +
-          `circle at ${x}px ${y}px, ` +
-          `rgba(255,255,255,0.15) 0%, ` +
-          `transparent 60%)`;
+        const x =
+          e.clientX - rect.left;
+
+        const y =
+          e.clientY - rect.top;
+
+
+        const centerX =
+          rect.width / 2;
+
+        const centerY =
+          rect.height / 2;
+
+
+        const rotateX =
+          ((y - centerY) / centerY) *
+          -7;
+
+        const rotateY =
+          ((x - centerX) / centerX) *
+          7;
+
+
+        el.style.transition =
+          'none';
+
+
+        el.style.transform =
+          `perspective(1000px) ` +
+          `rotateX(${rotateX.toFixed(2)}deg) ` +
+          `rotateY(${rotateY.toFixed(2)}deg) ` +
+          `scale3d(1.015, 1.015, 1.015)`;
+
+
+        if (glareEl) {
+
+          glareEl.style.background =
+            `radial-gradient(` +
+            `circle at ${x}px ${y}px, ` +
+            `rgba(255,255,255,0.15) 0%, ` +
+            `transparent 60%)`;
+        }
+
+      },
+      {
+        passive: true
       }
-    });
+    );
 
-    el.addEventListener('mouseleave', () => {
-      el.style.transition =
-        'transform 0.4s var(--ease-smooth), box-shadow 0.3s ease';
 
-      el.style.transform =
-        'perspective(1000px) rotateX(0deg) rotateY(0deg) ' +
-        'scale3d(1, 1, 1)';
+    // -------------------------
+    // MOUSE LEAVE
+    // -------------------------
 
-      if (glareEl) {
-        glareEl.style.background = 'none';
+    el.addEventListener(
+      'mouseleave',
+      () => {
+
+        el.style.transition =
+          'transform 0.4s var(--ease-smooth), ' +
+          'box-shadow 0.3s ease';
+
+
+        el.style.transform =
+          'perspective(1000px) ' +
+          'rotateX(0deg) ' +
+          'rotateY(0deg) ' +
+          'scale3d(1, 1, 1)';
+
+
+        if (glareEl) {
+          glareEl.style.background =
+            'none';
+        }
+
       }
-    });
+    );
+
   });
 }
 
@@ -181,19 +335,35 @@ function init3DTilt() {
 // ============================================================
 
 function initParticleField() {
-  const canvas = document.getElementById('ambient-particles-canvas');
+
+  const canvas =
+    document.getElementById(
+      'ambient-particles-canvas'
+    );
 
   if (!canvas) return;
-  if (canvas.dataset.particlesInitialized === 'true') return;
 
-  const ctx = canvas.getContext('2d');
+  if (
+    canvas.dataset.particlesInitialized ===
+    'true'
+  ) {
+    return;
+  }
+
+
+  const ctx =
+    canvas.getContext('2d');
 
   if (!ctx) return;
 
-  canvas.dataset.particlesInitialized = 'true';
+
+  canvas.dataset.particlesInitialized =
+    'true';
+
 
   let width = 0;
   let height = 0;
+
 
   const mouse = {
     x: 0,
@@ -201,84 +371,219 @@ function initParticleField() {
     radius: 120
   };
 
+
+  // -------------------------
+  // RESIZE
+  // -------------------------
+
   function resizeCanvas() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    width = window.innerWidth;
-    height = window.innerHeight;
+    const dpr =
+      Math.min(
+        window.devicePixelRatio || 1,
+        2
+      );
 
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
 
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    width =
+      window.innerWidth;
 
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    height =
+      window.innerHeight;
 
-    mouse.x = width / 2;
-    mouse.y = height / 2;
+
+    canvas.width =
+      Math.floor(width * dpr);
+
+    canvas.height =
+      Math.floor(height * dpr);
+
+
+    canvas.style.width =
+      `${width}px`;
+
+    canvas.style.height =
+      `${height}px`;
+
+
+    ctx.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
+
+
+    mouse.x =
+      width / 2;
+
+    mouse.y =
+      height / 2;
   }
+
 
   resizeCanvas();
 
-  window.addEventListener('resize', resizeCanvas, {
-    passive: true
-  });
 
-  window.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  }, {
-    passive: true
-  });
-
-  const particleCount = Math.min(
-    Math.max(Math.floor((width * height) / 18000), 20),
-    55
+  window.addEventListener(
+    'resize',
+    resizeCanvas,
+    {
+      passive: true
+    }
   );
+
+
+  // -------------------------
+  // MOUSE
+  // -------------------------
+
+  window.addEventListener(
+    'mousemove',
+    (e) => {
+
+      mouse.x =
+        e.clientX;
+
+      mouse.y =
+        e.clientY;
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  // -------------------------
+  // PARTICLE COUNT
+  // -------------------------
+
+  const particleCount =
+    Math.min(
+      Math.max(
+        Math.floor(
+          (width * height) /
+          18000
+        ),
+        20
+      ),
+      55
+    );
+
 
   const particles = [];
 
+
+  // -------------------------
+  // PARTICLE CLASS
+  // -------------------------
+
   class Particle {
+
     constructor() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
 
-      this.vx = (Math.random() - 0.5) * 0.4;
-      this.vy = (Math.random() - 0.5) * 0.4;
+      this.x =
+        Math.random() *
+        width;
 
-      this.size = Math.random() * 1.8 + 0.8;
-      this.baseAlpha = Math.random() * 0.3 + 0.15;
+      this.y =
+        Math.random() *
+        height;
+
+
+      this.vx =
+        (Math.random() - 0.5) *
+        0.4;
+
+      this.vy =
+        (Math.random() - 0.5) *
+        0.4;
+
+
+      this.size =
+        Math.random() * 1.8 +
+        0.8;
+
+
+      this.baseAlpha =
+        Math.random() * 0.3 +
+        0.15;
     }
 
+
     update() {
+
       this.x += this.vx;
       this.y += this.vy;
 
-      if (this.x < 0) this.x = width;
-      if (this.x > width) this.x = 0;
 
-      if (this.y < 0) this.y = height;
-      if (this.y > height) this.y = 0;
+      if (this.x < 0) {
+        this.x = width;
+      }
 
-      const dx = mouse.x - this.x;
-      const dy = mouse.y - this.y;
+      if (this.x > width) {
+        this.x = 0;
+      }
 
-      const distSq = dx * dx + dy * dy;
 
-      if (distSq > 0 && distSq < mouse.radius * mouse.radius) {
-        const dist = Math.sqrt(distSq);
+      if (this.y < 0) {
+        this.y = height;
+      }
+
+      if (this.y > height) {
+        this.y = 0;
+      }
+
+
+      const dx =
+        mouse.x - this.x;
+
+      const dy =
+        mouse.y - this.y;
+
+
+      const distSq =
+        dx * dx +
+        dy * dy;
+
+
+      if (
+        distSq > 0 &&
+        distSq <
+        mouse.radius *
+        mouse.radius
+      ) {
+
+        const dist =
+          Math.sqrt(distSq);
+
 
         const force =
-          (mouse.radius - dist) / mouse.radius;
+          (mouse.radius - dist) /
+          mouse.radius;
 
-        this.x -= (dx / dist) * force * 1.5;
-        this.y -= (dy / dist) * force * 1.5;
+
+        this.x -=
+          (dx / dist) *
+          force *
+          1.5;
+
+        this.y -=
+          (dy / dist) *
+          force *
+          1.5;
       }
+
     }
 
+
     draw() {
+
       ctx.beginPath();
+
 
       ctx.arc(
         this.x,
@@ -288,65 +593,142 @@ function initParticleField() {
         Math.PI * 2
       );
 
+
       ctx.fillStyle =
         `rgba(56, 189, 248, ${this.baseAlpha})`;
 
+
       ctx.fill();
     }
+
   }
 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
+
+  // -------------------------
+  // CREATE PARTICLES
+  // -------------------------
+
+  for (
+    let i = 0;
+    i < particleCount;
+    i++
+  ) {
+
+    particles.push(
+      new Particle()
+    );
+
   }
+
+
+  // -------------------------
+  // ANIMATION
+  // -------------------------
 
   function animate() {
-    ctx.clearRect(0, 0, width, height);
 
-    // Connections
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
+    ctx.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    // -----------------------
+    // CONNECTIONS
+    // -----------------------
+
+    for (
+      let i = 0;
+      i < particles.length;
+      i++
+    ) {
+
+      for (
+        let j = i + 1;
+        j < particles.length;
+        j++
+      ) {
+
         const dx =
-          particles[i].x - particles[j].x;
+          particles[i].x -
+          particles[j].x;
 
         const dy =
-          particles[i].y - particles[j].y;
+          particles[i].y -
+          particles[j].y;
 
-        const distSq = dx * dx + dy * dy;
 
-        if (distSq < 130 * 130) {
-          const dist = Math.sqrt(distSq);
+        const distSq =
+          dx * dx +
+          dy * dy;
+
+
+        if (
+          distSq <
+          130 * 130
+        ) {
+
+          const dist =
+            Math.sqrt(distSq);
+
 
           ctx.beginPath();
+
 
           ctx.moveTo(
             particles[i].x,
             particles[i].y
           );
 
+
           ctx.lineTo(
             particles[j].x,
             particles[j].y
           );
 
-          ctx.strokeStyle =
-            `rgba(56,189,248,${0.12 * (1 - dist / 130)})`;
 
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle =
+            `rgba(56,189,248,${0.12 *
+              (1 - dist / 130)})`;
+
+
+          ctx.lineWidth =
+            0.8;
+
 
           ctx.stroke();
         }
+
       }
+
     }
 
-    particles.forEach((particle) => {
-      particle.update();
-      particle.draw();
-    });
 
-    requestAnimationFrame(animate);
+    // -----------------------
+    // PARTICLES
+    // -----------------------
+
+    particles.forEach(
+      (particle) => {
+
+        particle.update();
+        particle.draw();
+
+      }
+    );
+
+
+    requestAnimationFrame(
+      animate
+    );
   }
 
-  requestAnimationFrame(animate);
+
+  requestAnimationFrame(
+    animate
+  );
 }
 
 
@@ -355,60 +737,155 @@ function initParticleField() {
 // ============================================================
 
 function initCustomCursor() {
-  const dot = document.getElementById('cursorDot');
-  const follower = document.getElementById('cursorFollower');
 
-  if (!dot || !follower) return;
+  const dot =
+    document.getElementById(
+      'cursorDot'
+    );
 
-  // Disable custom cursor on touch devices.
-  if (window.matchMedia('(pointer: coarse)').matches) {
-    dot.style.display = 'none';
-    follower.style.display = 'none';
+  const follower =
+    document.getElementById(
+      'cursorFollower'
+    );
+
+
+  if (!dot || !follower) {
     return;
   }
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
 
-  let followerX = mouseX;
-  let followerY = mouseY;
+  // -------------------------
+  // TOUCH DEVICES
+  // -------------------------
 
-  window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+  if (
+    window.matchMedia(
+      '(pointer: coarse)'
+    ).matches
+  ) {
 
-    dot.style.transform =
-      `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-  }, {
-    passive: true
-  });
+    dot.style.display =
+      'none';
 
-  function renderCursor() {
-    followerX += (mouseX - followerX) * 0.2;
-    followerY += (mouseY - followerY) * 0.2;
+    follower.style.display =
+      'none';
 
-    follower.style.transform =
-      `translate(${followerX}px, ${followerY}px) translate(-50%, -50%)`;
-
-    requestAnimationFrame(renderCursor);
+    return;
   }
 
-  requestAnimationFrame(renderCursor);
 
-  const interactiveElements = document.querySelectorAll(
-    'a, button, input, select, textarea, ' +
-    '.arena-zone-section, .tilt-card, .tech-bracket-container'
+  let mouseX =
+    window.innerWidth / 2;
+
+  let mouseY =
+    window.innerHeight / 2;
+
+
+  let followerX =
+    mouseX;
+
+  let followerY =
+    mouseY;
+
+
+  // -------------------------
+  // MOUSE
+  // -------------------------
+
+  window.addEventListener(
+    'mousemove',
+    (e) => {
+
+      mouseX =
+        e.clientX;
+
+      mouseY =
+        e.clientY;
+
+
+      dot.style.transform =
+        `translate(${mouseX}px, ${mouseY}px) ` +
+        `translate(-50%, -50%)`;
+
+    },
+    {
+      passive: true
+    }
   );
 
-  interactiveElements.forEach((el) => {
-    el.addEventListener('mouseenter', () => {
-      document.body.classList.add('cursor-hover');
-    });
 
-    el.addEventListener('mouseleave', () => {
-      document.body.classList.remove('cursor-hover');
-    });
-  });
+  // -------------------------
+  // FOLLOWER ANIMATION
+  // -------------------------
+
+  function renderCursor() {
+
+    followerX +=
+      (mouseX - followerX) *
+      0.2;
+
+    followerY +=
+      (mouseY - followerY) *
+      0.2;
+
+
+    follower.style.transform =
+      `translate(${followerX}px, ${followerY}px) ` +
+      `translate(-50%, -50%)`;
+
+
+    requestAnimationFrame(
+      renderCursor
+    );
+  }
+
+
+  requestAnimationFrame(
+    renderCursor
+  );
+
+
+  // -------------------------
+  // INTERACTIVE ELEMENTS
+  // -------------------------
+
+  const interactiveElements =
+    document.querySelectorAll(
+      'a, button, input, select, textarea, ' +
+      '.arena-zone-section, ' +
+      '.tilt-card, ' +
+      '.tech-bracket-container'
+    );
+
+
+  interactiveElements.forEach(
+    (el) => {
+
+      el.addEventListener(
+        'mouseenter',
+        () => {
+
+          document.body.classList.add(
+            'cursor-hover'
+          );
+
+        }
+      );
+
+
+      el.addEventListener(
+        'mouseleave',
+        () => {
+
+          document.body.classList.remove(
+            'cursor-hover'
+          );
+
+        }
+      );
+
+    }
+  );
 }
 
 
@@ -417,247 +894,528 @@ function initCustomCursor() {
 // ============================================================
 
 function initNavigation() {
-  const nav = document.getElementById('main-nav');
-  const trigger = document.getElementById('mobileMenuTrigger');
-  const overlay = document.getElementById('mobileNavOverlay');
-  const soundBtn = document.getElementById('soundToggleBtn');
 
-  // Scroll state
-  window.addEventListener('scroll', () => {
-    if (!nav) return;
-
-    nav.classList.toggle(
-      'scrolled',
-      window.scrollY > 30
+  const nav =
+    document.getElementById(
+      'main-nav'
     );
-  }, {
-    passive: true
-  });
 
-  // Mobile menu
-  if (trigger && overlay) {
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
+  const trigger =
+    document.getElementById(
+      'mobileMenuTrigger'
+    );
 
-      const isOpen =
-        overlay.classList.toggle('open');
+  const overlay =
+    document.getElementById(
+      'mobileNavOverlay'
+    );
 
-      trigger.classList.toggle(
-        'open',
-        isOpen
+  const soundBtn =
+    document.getElementById(
+      'soundToggleBtn'
+    );
+
+
+  // ==========================================================
+  // SCROLL STATE
+  // ==========================================================
+
+  window.addEventListener(
+    'scroll',
+    () => {
+
+      if (!nav) return;
+
+
+      nav.classList.toggle(
+        'scrolled',
+        window.scrollY > 30
       );
 
-      playTechSound('click');
-    });
+    },
+    {
+      passive: true
+    }
+  );
 
-    document.addEventListener('click', (e) => {
-      if (
-        overlay.classList.contains('open') &&
-        !overlay.contains(e.target) &&
-        !trigger.contains(e.target)
-      ) {
-        overlay.classList.remove('open');
-        trigger.classList.remove('open');
+
+  // ==========================================================
+  // MOBILE MENU
+  // ==========================================================
+
+  if (
+    trigger &&
+    overlay
+  ) {
+
+    trigger.addEventListener(
+      'click',
+      (e) => {
+
+        e.stopPropagation();
+
+
+        const isOpen =
+          overlay.classList.toggle(
+            'open'
+          );
+
+
+        trigger.classList.toggle(
+          'open',
+          isOpen
+        );
+
+
+        playTechSound(
+          'click'
+        );
+
       }
-    });
+    );
 
-    overlay.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        overlay.classList.remove('open');
-        trigger.classList.remove('open');
-      });
-    });
+
+    // -----------------------
+    // CLOSE ON OUTSIDE CLICK
+    // -----------------------
+
+    document.addEventListener(
+      'click',
+      (e) => {
+
+        if (
+          overlay.classList.contains(
+            'open'
+          ) &&
+          !overlay.contains(
+            e.target
+          ) &&
+          !trigger.contains(
+            e.target
+          )
+        ) {
+
+          overlay.classList.remove(
+            'open'
+          );
+
+          trigger.classList.remove(
+            'open'
+          );
+        }
+
+      }
+    );
+
+
+    // -----------------------
+    // CLOSE AFTER NAVIGATION
+    // -----------------------
+
+    overlay
+      .querySelectorAll('a')
+      .forEach(
+        (link) => {
+
+          link.addEventListener(
+            'click',
+            () => {
+
+              overlay.classList.remove(
+                'open'
+              );
+
+              trigger.classList.remove(
+                'open'
+              );
+
+            }
+          );
+
+        }
+      );
   }
 
-  // Sound toggle
+
+  // ==========================================================
+  // SOUND TOGGLE
+  // ==========================================================
+
   if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
 
-      soundBtn.textContent =
-        soundEnabled ? '🔊' : '🔇';
+    soundBtn.addEventListener(
+      'click',
+      () => {
 
-      soundBtn.setAttribute(
-        'aria-label',
-        soundEnabled
-          ? 'Disable interface sounds'
-          : 'Enable interface sounds'
-      );
+        soundEnabled =
+          !soundEnabled;
 
-      if (soundEnabled) {
-        playTechSound('click');
+
+        soundBtn.textContent =
+          soundEnabled
+            ? '🔊'
+            : '🔇';
+
+
+        soundBtn.setAttribute(
+          'aria-label',
+          soundEnabled
+            ? 'Disable interface sounds'
+            : 'Enable interface sounds'
+        );
+
+
+        if (soundEnabled) {
+          playTechSound(
+            'click'
+          );
+        }
+
       }
-    });
+    );
+
   }
 
-  // Active navigation
+
+  // ==========================================================
+  // ACTIVE NAVIGATION
+  // ==========================================================
+
   const currentPath =
     window.location.pathname;
+
 
   const navLinks =
     document.querySelectorAll(
       '.nav-link, .mobile-nav-link'
     );
 
-  navLinks.forEach((link) => {
-    const href = link.getAttribute('href');
 
-    if (!href) return;
+  navLinks.forEach(
+    (link) => {
 
-    let isActive = false;
+      const href =
+        link.getAttribute(
+          'href'
+        );
 
-    if (href === '/') {
-      isActive =
-        currentPath === '/' ||
-        currentPath.endsWith('/index.html');
-    } else {
-      const cleanHref =
-        href.split('#')[0].split('?')[0];
 
-      isActive =
-        currentPath.endsWith(cleanHref);
+      if (!href) return;
+
+
+      let isActive =
+        false;
+
+
+      // -----------------------
+      // HOME
+      // -----------------------
+
+      if (href === '/') {
+
+        isActive =
+          currentPath === '/' ||
+          currentPath.endsWith(
+            '/index.html'
+          );
+
+      }
+
+      // -----------------------
+      // OTHER PAGES
+      // -----------------------
+
+      else {
+
+        const cleanHref =
+          href
+            .split('#')[0]
+            .split('?')[0];
+
+
+        isActive =
+          currentPath.endsWith(
+            cleanHref
+          );
+      }
+
+
+      if (isActive) {
+
+        link.classList.add(
+          'active'
+        );
+
+      }
+
     }
+  );
 
-    if (isActive) {
-      link.classList.add('active');
-    }
-  });
 
-  // Interface sound listeners
+  // ==========================================================
+  // INTERFACE SOUND LISTENERS
+  // ==========================================================
+
   const buttons =
     document.querySelectorAll(
       'button, a, input, select'
     );
 
-  buttons.forEach((btn) => {
-    btn.addEventListener('mouseenter', () => {
-      playTechSound('hover');
-    });
 
-    btn.addEventListener('click', () => {
-      playTechSound('click');
-    });
-  });
+  buttons.forEach(
+    (btn) => {
+
+      btn.addEventListener(
+        'mouseenter',
+        () => {
+
+          playTechSound(
+            'hover'
+          );
+
+        }
+      );
+
+
+      btn.addEventListener(
+        'click',
+        () => {
+
+          playTechSound(
+            'click'
+          );
+
+        }
+      );
+
+    }
+  );
 }
 
 
 // ============================================================
 // DISCIPLINE ARENA VISUALIZERS
 //
-// IMPORTANT:
-// Robo Race has intentionally been removed from this function.
-// It is now handled exclusively by:
+// Robo Race is NOT initialized here.
 //
+// Robo Race:
 //     initRaceShowcase('race-visual-stage')
 //
-// The other three event visualizers remain unchanged.
+// Other events:
+//     Robo War
+//     Robo Tug of War
+//     Robo Soccer
 // ============================================================
 
 function initArenaVisualizers() {
 
-  // ----------------------------------------------------------
+
+  // ==========================================================
   // 1. ROBO WAR
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const warCanvas =
-    document.getElementById('canvas-war-zone');
+    document.getElementById(
+      'canvas-war-zone'
+    );
+
 
   if (warCanvas) {
-    const ctx = warCanvas.getContext('2d');
+
+    const ctx =
+      warCanvas.getContext(
+        '2d'
+      );
+
 
     if (!ctx) return;
+
 
     let angle = 0;
 
     const sparks = [];
+
     const shockwaves = [];
 
+
     let bot1Hp = 94;
+
     let bot2Hp = 88;
 
+
     function drawWar() {
-      const parent = warCanvas.parentElement;
+
+      const parent =
+        warCanvas.parentElement;
+
 
       if (!parent) return;
 
+
       const w =
         warCanvas.width =
-        parent.clientWidth || 420;
+        parent.clientWidth ||
+        420;
+
 
       const h =
         warCanvas.height =
-        parent.clientHeight || 420;
+        parent.clientHeight ||
+        420;
 
-      ctx.clearRect(0, 0, w, h);
+
+      ctx.clearRect(
+        0,
+        0,
+        w,
+        h
+      );
+
 
       angle += 0.032;
 
-      const cx = w / 2;
-      const cy = h / 2;
+
+      const cx =
+        w / 2;
+
+      const cy =
+        h / 2;
+
 
       const arenaR =
-        Math.min(w, h) * 0.38;
+        Math.min(
+          w,
+          h
+        ) * 0.38;
 
-      // Arena
+
+      // -----------------------
+      // ARENA
+      // -----------------------
+
       ctx.beginPath();
 
-      for (let i = 0; i < 8; i++) {
+
+      for (
+        let i = 0;
+        i < 8;
+        i++
+      ) {
+
         const a =
-          (i * Math.PI * 2) / 8;
+          (i *
+            Math.PI *
+            2) /
+          8;
+
 
         const x =
-          cx + Math.cos(a) * arenaR;
+          cx +
+          Math.cos(a) *
+          arenaR;
+
 
         const y =
-          cy + Math.sin(a) * arenaR;
+          cy +
+          Math.sin(a) *
+          arenaR;
+
 
         if (i === 0) {
-          ctx.moveTo(x, y);
+
+          ctx.moveTo(
+            x,
+            y
+          );
+
         } else {
-          ctx.lineTo(x, y);
+
+          ctx.lineTo(
+            x,
+            y
+          );
+
         }
+
       }
 
+
       ctx.closePath();
+
 
       ctx.fillStyle =
         'rgba(15,23,42,0.6)';
 
+
       ctx.fill();
+
 
       ctx.strokeStyle =
         'rgba(248,113,113,0.4)';
 
-      ctx.lineWidth = 2.5;
 
-      ctx.shadowColor = '#f43f5e';
-      ctx.shadowBlur = 12;
+      ctx.lineWidth =
+        2.5;
+
+
+      ctx.shadowColor =
+        '#f43f5e';
+
+
+      ctx.shadowBlur =
+        12;
+
 
       ctx.stroke();
 
-      ctx.shadowBlur = 0;
 
-      // Floor grate
+      ctx.shadowBlur =
+        0;
+
+
+      // -----------------------
+      // FLOOR GRATE
+      // -----------------------
+
       ctx.strokeStyle =
         'rgba(255,255,255,0.04)';
 
-      ctx.lineWidth = 1;
+
+      ctx.lineWidth =
+        1;
+
 
       for (
-        let x = cx - arenaR;
-        x < cx + arenaR;
+        let x =
+          cx - arenaR;
+        x <
+          cx + arenaR;
         x += 24
       ) {
+
         ctx.beginPath();
 
-        ctx.moveTo(x, cy - arenaR);
-        ctx.lineTo(x, cy + arenaR);
+        ctx.moveTo(
+          x,
+          cy - arenaR
+        );
+
+        ctx.lineTo(
+          x,
+          cy + arenaR
+        );
 
         ctx.stroke();
+
       }
 
-      // Center hazard ring
+
+      // -----------------------
+      // CENTER HAZARD RING
+      // -----------------------
+
       ctx.beginPath();
+
 
       ctx.arc(
         cx,
@@ -667,36 +1425,54 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.strokeStyle =
         'rgba(245,158,11,0.3)';
 
-      ctx.setLineDash([6, 6]);
-      ctx.lineWidth = 2;
+
+      ctx.setLineDash([
+        6,
+        6
+      ]);
+
+
+      ctx.lineWidth =
+        2;
+
 
       ctx.stroke();
 
+
       ctx.setLineDash([]);
 
-      // Bot positions
+
+      // -----------------------
+      // BOT POSITIONS
+      // -----------------------
+
       const b1x =
         cx +
         Math.cos(angle) *
         (arenaR * 0.52);
+
 
       const b1y =
         cy +
         Math.sin(angle * 1.6) *
         (arenaR * 0.42);
 
+
       const b2x =
         cx -
         Math.cos(angle) *
         (arenaR * 0.52);
 
+
       const b2y =
         cy -
         Math.sin(angle * 1.6) *
         (arenaR * 0.42);
+
 
       const dist =
         Math.hypot(
@@ -704,16 +1480,25 @@ function initArenaVisualizers() {
           b1y - b2y
         );
 
-      // Collision
+
+      // -----------------------
+      // COLLISION
+      // -----------------------
+
       if (
         dist < 46 &&
         Math.random() > 0.3
       ) {
+
         const impactX =
-          (b1x + b2x) / 2;
+          (b1x + b2x) /
+          2;
+
 
         const impactY =
-          (b1y + b2y) / 2;
+          (b1y + b2y) /
+          2;
+
 
         shockwaves.push({
           x: impactX,
@@ -722,27 +1507,38 @@ function initArenaVisualizers() {
           alpha: 1
         });
 
-        for (let i = 0; i < 6; i++) {
+
+        for (
+          let i = 0;
+          i < 6;
+          i++
+        ) {
+
           sparks.push({
             x: impactX,
             y: impactY,
             vx:
-              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) *
+              8,
             vy:
-              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) *
+              8,
             life: 1,
             color:
               Math.random() > 0.5
                 ? '#38bdf8'
                 : '#f59e0b'
           });
+
         }
+
 
         bot1Hp =
           Math.max(
             70,
             bot1Hp - 0.1
           );
+
 
         bot2Hp =
           Math.max(
@@ -751,24 +1547,45 @@ function initArenaVisualizers() {
           );
       }
 
-      // Shockwaves
+
+      // -----------------------
+      // SHOCKWAVES
+      // -----------------------
+
       for (
-        let i = shockwaves.length - 1;
+        let i =
+          shockwaves.length - 1;
         i >= 0;
         i--
       ) {
+
         const sw =
           shockwaves[i];
 
-        sw.r += 2.5;
-        sw.alpha -= 0.05;
 
-        if (sw.alpha <= 0) {
-          shockwaves.splice(i, 1);
+        sw.r +=
+          2.5;
+
+
+        sw.alpha -=
+          0.05;
+
+
+        if (
+          sw.alpha <= 0
+        ) {
+
+          shockwaves.splice(
+            i,
+            1
+          );
+
           continue;
         }
 
+
         ctx.beginPath();
+
 
         ctx.arc(
           sw.x,
@@ -778,34 +1595,64 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
+
         ctx.strokeStyle =
           `rgba(248,113,113,${sw.alpha * 0.8})`;
 
-        ctx.lineWidth = 2;
+
+        ctx.lineWidth =
+          2;
+
 
         ctx.stroke();
       }
 
-      // Sparks
+
+      // -----------------------
+      // SPARKS
+      // -----------------------
+
       for (
-        let i = sparks.length - 1;
+        let i =
+          sparks.length - 1;
         i >= 0;
         i--
       ) {
-        const s = sparks[i];
 
-        s.x += s.vx;
-        s.y += s.vy;
-        s.life -= 0.04;
+        const s =
+          sparks[i];
 
-        if (s.life <= 0) {
-          sparks.splice(i, 1);
+
+        s.x +=
+          s.vx;
+
+        s.y +=
+          s.vy;
+
+
+        s.life -=
+          0.04;
+
+
+        if (
+          s.life <= 0
+        ) {
+
+          sparks.splice(
+            i,
+            1
+          );
+
           continue;
         }
 
-        ctx.fillStyle = s.color;
+
+        ctx.fillStyle =
+          s.color;
+
 
         ctx.beginPath();
+
 
         ctx.arc(
           s.x,
@@ -815,23 +1662,48 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
-        ctx.shadowColor = s.color;
-        ctx.shadowBlur = 6;
+
+        ctx.shadowColor =
+          s.color;
+
+
+        ctx.shadowBlur =
+          6;
+
 
         ctx.fill();
 
-        ctx.shadowBlur = 0;
+
+        ctx.shadowBlur =
+          0;
       }
 
-      // Bot 1
+
+      // -----------------------
+      // BOT 1
+      // -----------------------
+
       ctx.save();
 
-      ctx.translate(b1x, b1y);
-      ctx.rotate(angle * 2.5);
 
-      ctx.fillStyle = '#0f172a';
+      ctx.translate(
+        b1x,
+        b1y
+      );
+
+
+      ctx.rotate(
+        angle * 2.5
+      );
+
+
+      ctx.fillStyle =
+        '#0f172a';
+
 
       ctx.beginPath();
+
+
       ctx.roundRect(
         -16,
         -16,
@@ -840,22 +1712,44 @@ function initArenaVisualizers() {
         6
       );
 
+
       ctx.fill();
 
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 2;
+
+      ctx.strokeStyle =
+        '#38bdf8';
+
+
+      ctx.lineWidth =
+        2;
+
+
       ctx.stroke();
+
 
       const bladeAngle =
         angle * 14;
 
+
       ctx.save();
 
-      ctx.rotate(bladeAngle);
 
-      ctx.fillStyle = '#38bdf8';
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 14;
+      ctx.rotate(
+        bladeAngle
+      );
+
+
+      ctx.fillStyle =
+        '#38bdf8';
+
+
+      ctx.shadowColor =
+        '#38bdf8';
+
+
+      ctx.shadowBlur =
+        14;
+
 
       ctx.fillRect(
         -22,
@@ -864,9 +1758,13 @@ function initArenaVisualizers() {
         8
       );
 
-      ctx.fillStyle = '#f8fafc';
+
+      ctx.fillStyle =
+        '#f8fafc';
+
 
       ctx.beginPath();
+
 
       ctx.arc(
         -20,
@@ -876,6 +1774,7 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.arc(
         20,
         0,
@@ -884,15 +1783,23 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.fill();
 
-      ctx.shadowBlur = 0;
+
+      ctx.shadowBlur =
+        0;
+
 
       ctx.restore();
 
-      ctx.fillStyle = '#38bdf8';
+
+      ctx.fillStyle =
+        '#38bdf8';
+
 
       ctx.beginPath();
+
 
       ctx.arc(
         0,
@@ -902,17 +1809,34 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.fill();
+
 
       ctx.restore();
 
-      // Bot 2
+
+      // -----------------------
+      // BOT 2
+      // -----------------------
+
       ctx.save();
 
-      ctx.translate(b2x, b2y);
-      ctx.rotate(-angle * 1.8);
 
-      ctx.fillStyle = '#334155';
+      ctx.translate(
+        b2x,
+        b2y
+      );
+
+
+      ctx.rotate(
+        -angle * 1.8
+      );
+
+
+      ctx.fillStyle =
+        '#334155';
+
 
       ctx.fillRect(
         -18,
@@ -920,6 +1844,7 @@ function initArenaVisualizers() {
         8,
         36
       );
+
 
       ctx.fillRect(
         10,
@@ -928,38 +1853,96 @@ function initArenaVisualizers() {
         36
       );
 
-      ctx.fillStyle = '#f59e0b';
+
+      ctx.fillStyle =
+        '#f59e0b';
+
 
       ctx.beginPath();
 
-      ctx.moveTo(-10, -14);
-      ctx.lineTo(10, -14);
-      ctx.lineTo(14, 14);
-      ctx.lineTo(-14, 14);
+
+      ctx.moveTo(
+        -10,
+        -14
+      );
+
+
+      ctx.lineTo(
+        10,
+        -14
+      );
+
+
+      ctx.lineTo(
+        14,
+        14
+      );
+
+
+      ctx.lineTo(
+        -14,
+        14
+      );
+
 
       ctx.closePath();
+
+
       ctx.fill();
 
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.5;
+
+      ctx.strokeStyle =
+        '#ffffff';
+
+
+      ctx.lineWidth =
+        1.5;
+
+
       ctx.stroke();
 
-      ctx.fillStyle = '#e2e8f0';
+
+      ctx.fillStyle =
+        '#e2e8f0';
+
 
       ctx.beginPath();
 
-      ctx.moveTo(-12, 14);
-      ctx.lineTo(12, 14);
-      ctx.lineTo(0, 24);
+
+      ctx.moveTo(
+        -12,
+        14
+      );
+
+
+      ctx.lineTo(
+        12,
+        14
+      );
+
+
+      ctx.lineTo(
+        0,
+        24
+      );
+
 
       ctx.closePath();
+
+
       ctx.fill();
+
 
       ctx.restore();
 
+
+      // -----------------------
       // HUD
+      // -----------------------
+
       ctx.fillStyle =
         'rgba(10,14,24,0.9)';
+
 
       ctx.fillRect(
         16,
@@ -968,8 +1951,10 @@ function initArenaVisualizers() {
         26
       );
 
+
       ctx.strokeStyle =
         'rgba(248,113,113,0.3)';
+
 
       ctx.strokeRect(
         16,
@@ -978,10 +1963,14 @@ function initArenaVisualizers() {
         26
       );
 
+
       ctx.font =
         '11px IBM Plex Mono, monospace';
 
-      ctx.fillStyle = '#f87171';
+
+      ctx.fillStyle =
+        '#f87171';
+
 
       ctx.fillText(
         `SPINNER: 8,400 RPM   IMPACT: 19.4G   ARMOR: ${bot1Hp.toFixed(0)}% vs ${bot2Hp.toFixed(0)}%`,
@@ -989,56 +1978,94 @@ function initArenaVisualizers() {
         h - 21
       );
 
-      requestAnimationFrame(drawWar);
+
+      requestAnimationFrame(
+        drawWar
+      );
     }
 
-    requestAnimationFrame(drawWar);
+
+    requestAnimationFrame(
+      drawWar
+    );
   }
 
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // 2. ROBO TUG OF WAR
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const tugCanvas =
-    document.getElementById('canvas-tug-zone');
+    document.getElementById(
+      'canvas-tug-zone'
+    );
+
 
   if (tugCanvas) {
+
     const ctx =
-      tugCanvas.getContext('2d');
+      tugCanvas.getContext(
+        '2d'
+      );
+
 
     if (!ctx) return;
+
 
     let phase = 0;
 
     const lightningArcs = [];
 
+
     function drawTug() {
+
       const parent =
         tugCanvas.parentElement;
 
+
       if (!parent) return;
+
 
       const w =
         tugCanvas.width =
-        parent.clientWidth || 420;
+        parent.clientWidth ||
+        420;
+
 
       const h =
         tugCanvas.height =
-        parent.clientHeight || 420;
+        parent.clientHeight ||
+        420;
 
-      ctx.clearRect(0, 0, w, h);
 
-      phase += 0.038;
+      ctx.clearRect(
+        0,
+        0,
+        w,
+        h
+      );
+
+
+      phase +=
+        0.038;
+
 
       const offset =
-        Math.sin(phase) * 28;
+        Math.sin(phase) *
+        28;
 
-      const cy = h / 2;
 
-      // Platform
+      const cy =
+        h / 2;
+
+
+      // -----------------------
+      // PLATFORM
+      // -----------------------
+
       ctx.fillStyle =
         'rgba(15,23,42,0.5)';
+
 
       ctx.fillRect(
         20,
@@ -1047,10 +2074,14 @@ function initArenaVisualizers() {
         120
       );
 
+
       ctx.strokeStyle =
         'rgba(56,189,248,0.2)';
 
-      ctx.lineWidth = 1.5;
+
+      ctx.lineWidth =
+        1.5;
+
 
       ctx.strokeRect(
         20,
@@ -1059,45 +2090,79 @@ function initArenaVisualizers() {
         120
       );
 
-      // Center threshold
+
+      // -----------------------
+      // CENTER THRESHOLD
+      // -----------------------
+
       ctx.beginPath();
+
 
       ctx.moveTo(
         w / 2,
         cy - 60
       );
 
+
       ctx.lineTo(
         w / 2,
         cy + 60
       );
 
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 2;
 
-      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle =
+        '#f59e0b';
+
+
+      ctx.lineWidth =
+        2;
+
+
+      ctx.setLineDash([
+        4,
+        4
+      ]);
+
 
       ctx.stroke();
 
+
       ctx.setLineDash([]);
 
+
+      // -----------------------
+      // BOT POSITIONS
+      // -----------------------
+
       const bot1X =
-        64 + offset * 0.35;
+        64 +
+        offset * 0.35;
+
 
       const bot2X =
-        w - 64 + offset * 0.35;
+        w - 64 +
+        offset * 0.35;
+
 
       const sagY =
         cy +
-        Math.sin(phase * 3) * 4;
+        Math.sin(
+          phase * 3
+        ) * 4;
 
-      // Cable
+
+      // -----------------------
+      // CABLE
+      // -----------------------
+
       ctx.beginPath();
+
 
       ctx.moveTo(
         bot1X + 22,
         cy
       );
+
 
       ctx.quadraticCurveTo(
         w / 2 + offset,
@@ -1106,26 +2171,53 @@ function initArenaVisualizers() {
         cy
       );
 
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 4;
 
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 14;
+      ctx.strokeStyle =
+        '#38bdf8';
+
+
+      ctx.lineWidth =
+        4;
+
+
+      ctx.shadowColor =
+        '#38bdf8';
+
+
+      ctx.shadowBlur =
+        14;
+
 
       ctx.stroke();
 
-      ctx.shadowBlur = 0;
 
-      // Knot
+      ctx.shadowBlur =
+        0;
+
+
+      // -----------------------
+      // KNOT
+      // -----------------------
+
       const knotX =
-        w / 2 + offset;
+        w / 2 +
+        offset;
 
-      ctx.fillStyle = '#f59e0b';
 
-      ctx.shadowColor = '#f59e0b';
-      ctx.shadowBlur = 10;
+      ctx.fillStyle =
+        '#f59e0b';
+
+
+      ctx.shadowColor =
+        '#f59e0b';
+
+
+      ctx.shadowBlur =
+        10;
+
 
       ctx.beginPath();
+
 
       ctx.arc(
         knotX,
@@ -1135,69 +2227,115 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.fill();
 
-      ctx.shadowBlur = 0;
 
-      // Lightning
-      if (Math.random() > 0.4) {
+      ctx.shadowBlur =
+        0;
+
+
+      // -----------------------
+      // LIGHTNING
+      // -----------------------
+
+      if (
+        Math.random() > 0.4
+      ) {
+
         lightningArcs.push({
           x:
             knotX +
-            (Math.random() - 0.5) * 60,
+            (Math.random() - 0.5) *
+            60,
+
           y:
             sagY +
-            (Math.random() - 0.5) * 16,
+            (Math.random() - 0.5) *
+            16,
+
           life: 1
         });
+
       }
 
+
       for (
-        let i = lightningArcs.length - 1;
+        let i =
+          lightningArcs.length - 1;
         i >= 0;
         i--
       ) {
+
         const arc =
           lightningArcs[i];
 
-        arc.life -= 0.15;
 
-        if (arc.life <= 0) {
-          lightningArcs.splice(i, 1);
+        arc.life -=
+          0.15;
+
+
+        if (
+          arc.life <= 0
+        ) {
+
+          lightningArcs.splice(
+            i,
+            1
+          );
+
           continue;
         }
+
 
         ctx.strokeStyle =
           `rgba(56,189,248,${arc.life})`;
 
-        ctx.lineWidth = 2;
+
+        ctx.lineWidth =
+          2;
+
 
         ctx.beginPath();
+
 
         ctx.moveTo(
           arc.x,
           arc.y
         );
 
+
         ctx.lineTo(
           arc.x +
-            (Math.random() - 0.5) * 12,
+            (Math.random() - 0.5) *
+            12,
+
           arc.y +
-            (Math.random() - 0.5) * 12
+            (Math.random() - 0.5) *
+            12
         );
+
 
         ctx.stroke();
       }
 
-      // Left crawler
+
+      // -----------------------
+      // LEFT CRAWLER
+      // -----------------------
+
       ctx.save();
+
 
       ctx.translate(
         bot1X,
         cy
       );
 
-      ctx.fillStyle = '#1e293b';
+
+      ctx.fillStyle =
+        '#1e293b';
+
 
       ctx.fillRect(
         -22,
@@ -1206,6 +2344,7 @@ function initArenaVisualizers() {
         8
       );
 
+
       ctx.fillRect(
         -22,
         10,
@@ -1213,14 +2352,19 @@ function initArenaVisualizers() {
         8
       );
 
-      ctx.fillStyle = '#38bdf8';
+
+      ctx.fillStyle =
+        '#38bdf8';
+
 
       for (
         let tx = -16;
         tx <= 16;
         tx += 8
       ) {
+
         ctx.beginPath();
+
 
         ctx.arc(
           tx,
@@ -1230,6 +2374,7 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
+
         ctx.arc(
           tx,
           14,
@@ -1238,12 +2383,17 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
+
         ctx.fill();
       }
 
-      ctx.fillStyle = '#f8fafc';
+
+      ctx.fillStyle =
+        '#f8fafc';
+
 
       ctx.beginPath();
+
 
       ctx.roundRect(
         -18,
@@ -1253,9 +2403,13 @@ function initArenaVisualizers() {
         4
       );
 
+
       ctx.fill();
 
-      ctx.fillStyle = '#0284c7';
+
+      ctx.fillStyle =
+        '#0284c7';
+
 
       ctx.fillRect(
         -12,
@@ -1264,10 +2418,14 @@ function initArenaVisualizers() {
         12
       );
 
-      ctx.fillStyle = '#38bdf8';
+
+      ctx.fillStyle =
+        '#38bdf8';
+
 
       ctx.font =
         '10px monospace';
+
 
       ctx.fillText(
         '>TORQ<',
@@ -1275,17 +2433,26 @@ function initArenaVisualizers() {
         3
       );
 
+
       ctx.restore();
 
-      // Right crawler
+
+      // -----------------------
+      // RIGHT CRAWLER
+      // -----------------------
+
       ctx.save();
+
 
       ctx.translate(
         bot2X,
         cy
       );
 
-      ctx.fillStyle = '#1e293b';
+
+      ctx.fillStyle =
+        '#1e293b';
+
 
       ctx.fillRect(
         -22,
@@ -1294,6 +2461,7 @@ function initArenaVisualizers() {
         8
       );
 
+
       ctx.fillRect(
         -22,
         10,
@@ -1301,14 +2469,19 @@ function initArenaVisualizers() {
         8
       );
 
-      ctx.fillStyle = '#f59e0b';
+
+      ctx.fillStyle =
+        '#f59e0b';
+
 
       for (
         let tx = -16;
         tx <= 16;
         tx += 8
       ) {
+
         ctx.beginPath();
+
 
         ctx.arc(
           tx,
@@ -1318,6 +2491,7 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
+
         ctx.arc(
           tx,
           14,
@@ -1326,12 +2500,17 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
+
         ctx.fill();
       }
 
-      ctx.fillStyle = '#f59e0b';
+
+      ctx.fillStyle =
+        '#f59e0b';
+
 
       ctx.beginPath();
+
 
       ctx.roundRect(
         -18,
@@ -1341,9 +2520,13 @@ function initArenaVisualizers() {
         4
       );
 
+
       ctx.fill();
 
-      ctx.fillStyle = '#0f172a';
+
+      ctx.fillStyle =
+        '#0f172a';
+
 
       ctx.fillRect(
         -12,
@@ -1352,10 +2535,14 @@ function initArenaVisualizers() {
         12
       );
 
-      ctx.fillStyle = '#f59e0b';
+
+      ctx.fillStyle =
+        '#f59e0b';
+
 
       ctx.font =
         '10px monospace';
+
 
       ctx.fillText(
         '>FORCE<',
@@ -1363,17 +2550,25 @@ function initArenaVisualizers() {
         3
       );
 
+
       ctx.restore();
 
+
+      // -----------------------
       // HUD
+      // -----------------------
+
       const tensionN =
         (
           2150 +
-          Math.abs(offset) * 22
+          Math.abs(offset) *
+          22
         ).toFixed(0);
+
 
       ctx.fillStyle =
         'rgba(10,14,24,0.9)';
+
 
       ctx.fillRect(
         16,
@@ -1382,8 +2577,10 @@ function initArenaVisualizers() {
         26
       );
 
+
       ctx.strokeStyle =
         'rgba(56,189,248,0.3)';
+
 
       ctx.strokeRect(
         16,
@@ -1392,10 +2589,14 @@ function initArenaVisualizers() {
         26
       );
 
+
       ctx.font =
         '11px IBM Plex Mono, monospace';
 
-      ctx.fillStyle = '#38bdf8';
+
+      ctx.fillStyle =
+        '#38bdf8';
+
 
       ctx.fillText(
         `LOAD: ${tensionN} N   TORQUE: 48.6 N·m   TRACTION: μ 0.98`,
@@ -1403,52 +2604,78 @@ function initArenaVisualizers() {
         h - 21
       );
 
-      requestAnimationFrame(drawTug);
+
+      requestAnimationFrame(
+        drawTug
+      );
     }
 
-    requestAnimationFrame(drawTug);
+
+    requestAnimationFrame(
+      drawTug
+    );
   }
 
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // 3. ROBO SOCCER
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const soccerCanvas =
-    document.getElementById('canvas-soccer-zone');
+    document.getElementById(
+      'canvas-soccer-zone'
+    );
+
 
   if (soccerCanvas) {
+
     const ctx =
-      soccerCanvas.getContext('2d');
+      soccerCanvas.getContext(
+        '2d'
+      );
+
 
     if (!ctx) return;
+
 
     let botX = 90;
     let botY = 160;
 
+
     let ballX = 150;
     let ballY = 160;
+
 
     let ballVx = 3.6;
     let ballVy = 1.8;
 
+
     const goalBursts = [];
+
 
     let goalsCount = 4;
 
+
     function drawSoccer() {
+
       const parent =
         soccerCanvas.parentElement;
 
+
       if (!parent) return;
+
 
       const w =
         soccerCanvas.width =
-        parent.clientWidth || 420;
+        parent.clientWidth ||
+        420;
+
 
       const h =
         soccerCanvas.height =
-        parent.clientHeight || 420;
+        parent.clientHeight ||
+        420;
+
 
       ctx.clearRect(
         0,
@@ -1457,9 +2684,14 @@ function initArenaVisualizers() {
         h
       );
 
-      // Pitch
+
+      // -----------------------
+      // PITCH
+      // -----------------------
+
       ctx.fillStyle =
         'rgba(15,23,42,0.7)';
+
 
       ctx.fillRect(
         24,
@@ -1468,10 +2700,14 @@ function initArenaVisualizers() {
         h - 48
       );
 
+
       ctx.strokeStyle =
         'rgba(52,211,153,0.25)';
 
-      ctx.lineWidth = 1.5;
+
+      ctx.lineWidth =
+        1.5;
+
 
       ctx.strokeRect(
         24,
@@ -1480,23 +2716,35 @@ function initArenaVisualizers() {
         h - 48
       );
 
-      // Center line
+
+      // -----------------------
+      // CENTER LINE
+      // -----------------------
+
       ctx.beginPath();
+
 
       ctx.moveTo(
         w / 2,
         24
       );
 
+
       ctx.lineTo(
         w / 2,
         h - 24
       );
 
+
       ctx.stroke();
 
-      // Center circle
+
+      // -----------------------
+      // CENTER CIRCLE
+      // -----------------------
+
       ctx.beginPath();
+
 
       ctx.arc(
         w / 2,
@@ -1506,19 +2754,29 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.stroke();
 
-      // Goal
+
+      // -----------------------
+      // GOAL
+      // -----------------------
+
       const goalTop =
         h / 2 - 38;
+
 
       const goalBottom =
         h / 2 + 38;
 
+
       ctx.strokeStyle =
         '#34d399';
 
-      ctx.lineWidth = 2.5;
+
+      ctx.lineWidth =
+        2.5;
+
 
       ctx.strokeRect(
         w - 24,
@@ -1527,94 +2785,181 @@ function initArenaVisualizers() {
         76
       );
 
-      // Trajectory
+
+      // -----------------------
+      // TRAJECTORY
+      // -----------------------
+
       ctx.beginPath();
 
-      ctx.setLineDash([4, 6]);
+
+      ctx.setLineDash([
+        4,
+        6
+      ]);
+
 
       ctx.moveTo(
         ballX,
         ballY
       );
 
+
       ctx.lineTo(
-        ballX + ballVx * 18,
-        ballY + ballVy * 18
+        ballX +
+          ballVx * 18,
+
+        ballY +
+          ballVy * 18
       );
+
 
       ctx.strokeStyle =
         'rgba(52,211,153,0.4)';
 
+
       ctx.stroke();
+
 
       ctx.setLineDash([]);
 
-      // Ball physics
-      ballX += ballVx;
-      ballY += ballVy;
+
+      // -----------------------
+      // BALL PHYSICS
+      // -----------------------
+
+      ballX +=
+        ballVx;
+
+      ballY +=
+        ballVy;
+
 
       if (
         ballY < 40 ||
         ballY > h - 40
       ) {
-        ballVy *= -1;
+
+        ballVy *=
+          -1;
       }
 
-      if (ballX < 40) {
-        ballVx *= -1;
+
+      if (
+        ballX < 40
+      ) {
+
+        ballVx *=
+          -1;
       }
 
-      // Goal
+
+      // -----------------------
+      // GOAL DETECTION
+      // -----------------------
+
       if (
         ballX > w - 30 &&
         ballY > goalTop &&
         ballY < goalBottom
       ) {
-        ballVx = -4.2;
+
+        ballVx =
+          -4.2;
+
 
         goalsCount++;
 
-        for (let i = 0; i < 18; i++) {
+
+        for (
+          let i = 0;
+          i < 18;
+          i++
+        ) {
+
           goalBursts.push({
-            x: w - 24,
-            y: ballY,
+
+            x:
+              w - 24,
+
+            y:
+              ballY,
+
             vx:
-              (Math.random() - 1.2) * 5,
+              (Math.random() - 1.2) *
+              5,
+
             vy:
-              (Math.random() - 0.5) * 5,
-            life: 1,
+              (Math.random() - 0.5) *
+              5,
+
+            life:
+              1,
+
             color:
               Math.random() > 0.5
                 ? '#34d399'
                 : '#38bdf8'
+
           });
+
         }
       }
 
-      // Goal particles
+
+      // -----------------------
+      // GOAL PARTICLES
+      // -----------------------
+
       for (
-        let i = goalBursts.length - 1;
+        let i =
+          goalBursts.length - 1;
         i >= 0;
         i--
       ) {
+
         const gb =
           goalBursts[i];
 
-        gb.x += gb.vx;
-        gb.y += gb.vy;
-        gb.life -= 0.04;
 
-        if (gb.life <= 0) {
-          goalBursts.splice(i, 1);
+        gb.x +=
+          gb.vx;
+
+        gb.y +=
+          gb.vy;
+
+
+        gb.life -=
+          0.04;
+
+
+        if (
+          gb.life <= 0
+        ) {
+
+          goalBursts.splice(
+            i,
+            1
+          );
+
           continue;
         }
 
-        ctx.fillStyle = gb.color;
 
-        ctx.shadowColor = gb.color;
-        ctx.shadowBlur = 8;
+        ctx.fillStyle =
+          gb.color;
+
+
+        ctx.shadowColor =
+          gb.color;
+
+
+        ctx.shadowBlur =
+          8;
+
 
         ctx.beginPath();
+
 
         ctx.arc(
           gb.x,
@@ -1624,29 +2969,52 @@ function initArenaVisualizers() {
           Math.PI * 2
         );
 
+
         ctx.fill();
 
-        ctx.shadowBlur = 0;
+
+        ctx.shadowBlur =
+          0;
       }
 
-      // Bot follows ball
+
+      // -----------------------
+      // BOT FOLLOWS BALL
+      // -----------------------
+
       botX +=
-        (ballX - 36 - botX) *
+        (
+          ballX -
+          36 -
+          botX
+        ) *
         0.09;
+
 
       botY +=
-        (ballY - botY) *
+        (
+          ballY -
+          botY
+        ) *
         0.09;
 
-      // Striker bot
+
+      // -----------------------
+      // STRIKER BOT
+      // -----------------------
+
       ctx.save();
+
 
       ctx.translate(
         botX,
         botY
       );
 
-      ctx.fillStyle = '#334155';
+
+      ctx.fillStyle =
+        '#334155';
+
 
       ctx.fillRect(
         -16,
@@ -1655,6 +3023,7 @@ function initArenaVisualizers() {
         28
       );
 
+
       ctx.fillRect(
         10,
         -14,
@@ -1662,9 +3031,13 @@ function initArenaVisualizers() {
         28
       );
 
-      ctx.fillStyle = '#f8fafc';
+
+      ctx.fillStyle =
+        '#f8fafc';
+
 
       ctx.beginPath();
+
 
       ctx.arc(
         0,
@@ -1674,14 +3047,24 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.fill();
 
-      ctx.strokeStyle = '#34d399';
-      ctx.lineWidth = 2;
+
+      ctx.strokeStyle =
+        '#34d399';
+
+
+      ctx.lineWidth =
+        2;
+
 
       ctx.stroke();
 
-      ctx.fillStyle = '#34d399';
+
+      ctx.fillStyle =
+        '#34d399';
+
 
       ctx.fillRect(
         12,
@@ -1690,9 +3073,13 @@ function initArenaVisualizers() {
         16
       );
 
-      ctx.fillStyle = '#0f172a';
+
+      ctx.fillStyle =
+        '#0f172a';
+
 
       ctx.beginPath();
+
 
       ctx.arc(
         0,
@@ -1702,12 +3089,17 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.fill();
 
-      ctx.fillStyle = '#34d399';
+
+      ctx.fillStyle =
+        '#34d399';
+
 
       ctx.font =
         '10px monospace';
+
 
       ctx.fillText(
         '⚡ ⚡',
@@ -1715,15 +3107,28 @@ function initArenaVisualizers() {
         4
       );
 
+
       ctx.restore();
 
-      // Ball
-      ctx.shadowColor = '#34d399';
-      ctx.shadowBlur = 12;
 
-      ctx.fillStyle = '#ffffff';
+      // -----------------------
+      // BALL
+      // -----------------------
+
+      ctx.shadowColor =
+        '#34d399';
+
+
+      ctx.shadowBlur =
+        12;
+
+
+      ctx.fillStyle =
+        '#ffffff';
+
 
       ctx.beginPath();
+
 
       ctx.arc(
         ballX,
@@ -1733,18 +3138,32 @@ function initArenaVisualizers() {
         Math.PI * 2
       );
 
+
       ctx.fill();
 
-      ctx.strokeStyle = '#34d399';
-      ctx.lineWidth = 2;
+
+      ctx.strokeStyle =
+        '#34d399';
+
+
+      ctx.lineWidth =
+        2;
+
 
       ctx.stroke();
 
-      ctx.shadowBlur = 0;
 
+      ctx.shadowBlur =
+        0;
+
+
+      // -----------------------
       // HUD
+      // -----------------------
+
       ctx.fillStyle =
         'rgba(10,14,24,0.9)';
+
 
       ctx.fillRect(
         16,
@@ -1753,8 +3172,10 @@ function initArenaVisualizers() {
         26
       );
 
+
       ctx.strokeStyle =
         'rgba(52,211,153,0.3)';
+
 
       ctx.strokeRect(
         16,
@@ -1763,10 +3184,14 @@ function initArenaVisualizers() {
         26
       );
 
+
       ctx.font =
         '11px IBM Plex Mono, monospace';
 
-      ctx.fillStyle = '#34d399';
+
+      ctx.fillStyle =
+        '#34d399';
+
 
       ctx.fillText(
         `OMNI-STRIKER // VELOCITY: 4.2 M/S   ACCURACY: 99.2%   GOALS: ${goalsCount}`,
@@ -1774,11 +3199,18 @@ function initArenaVisualizers() {
         h - 21
       );
 
-      requestAnimationFrame(drawSoccer);
+
+      requestAnimationFrame(
+        drawSoccer
+      );
     }
 
-    requestAnimationFrame(drawSoccer);
+
+    requestAnimationFrame(
+      drawSoccer
+    );
   }
+
 }
 
 
@@ -1791,53 +3223,134 @@ document.addEventListener(
   () => {
 
     const curtain =
-      document.getElementById('init-curtain');
+      document.getElementById(
+        'init-curtain'
+      );
 
-    // Lightweight UI
+
+    // ========================================================
+    // LIGHTWEIGHT UI
+    // ========================================================
+
     initCustomCursor();
+
     initNavigation();
+
     init3DTilt();
+
     initParticleField();
 
-    // ONLY War / Tug / Soccer are initialized here.
-    // Robo Race is intentionally excluded.
+
+    // ========================================================
+    // EVENT VISUALIZERS
+    //
+    // Only:
+    // - Robo War
+    // - Robo Tug of War
+    // - Robo Soccer
+    //
+    // Robo Race is handled separately by:
+    // three-event-showcase.js
+    // ========================================================
+
     initArenaVisualizers();
 
-    // Fast preloader removal
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        curtain?.classList.add('loaded');
-      });
-    });
 
-    // Heavy 3D systems after first render
-    setTimeout(() => {
+    // ========================================================
+    // FAST PRELOADER REMOVAL
+    // ========================================================
 
-      // NEW ROBO RACE 3D SHOWCASE
-      const raceStage =
-        document.getElementById(
-          'race-visual-stage'
+    requestAnimationFrame(
+      () => {
+
+        requestAnimationFrame(
+          () => {
+
+            curtain?.classList.add(
+              'loaded'
+            );
+
+          }
         );
 
-      if (raceStage) {
-        initRaceShowcase(
-          'race-visual-stage'
-        );
       }
+    );
 
-      // Campus 3D
-      const campusCanvas =
-        document.getElementById(
-          'campus-3d-canvas'
-        );
 
-      if (campusCanvas) {
-        initCampusScene(
-          'campus-3d-canvas'
-        );
-      }
+    // ========================================================
+    // HEAVY 3D SYSTEMS
+    // Start after initial render.
+    // ========================================================
 
-    }, 150);
+    setTimeout(
+      () => {
+
+
+        // ======================================================
+        // ROBO RACE 3D SHOWCASE
+        // ======================================================
+
+        const raceStage =
+          document.getElementById(
+            'race-visual-stage'
+          );
+
+
+        if (raceStage) {
+
+          try {
+
+            initRaceShowcase(
+              'race-visual-stage'
+            );
+
+          } catch (error) {
+
+            console.error(
+              'Robo Race 3D initialization failed:',
+              error
+            );
+
+          }
+
+        }
+
+
+        // ======================================================
+        // CAMPUS 3D
+        // ======================================================
+
+        const campusCanvas =
+          document.getElementById(
+            'campus-3d-canvas'
+          );
+
+
+        if (campusCanvas) {
+
+          try {
+
+            initCampusScene(
+              'campus-3d-canvas'
+            );
+
+          } catch (error) {
+
+            console.error(
+              'Campus 3D initialization failed:',
+              error
+            );
+
+          }
+
+        }
+
+      },
+      150
+    );
+
   },
-  { once: true }
+  {
+    once: true
+  }
 );
